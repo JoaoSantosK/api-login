@@ -4,6 +4,8 @@ app.use(express.json()) //Usando JSON
 //Recomendação para chamar o express (do próprio site).
 import { PrismaClient } from '@prisma/client' // < Inclusão do Prisma
 
+// TODO: Front-end para conectar ao servidor
+
 const prisma = new PrismaClient() // < Inclusão do Prisma
 
 /*
