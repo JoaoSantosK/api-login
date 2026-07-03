@@ -32,24 +32,27 @@ app.post('/users', async (req, res) => {
 })
 
 app.get('/users', async (req, res) => {
-    
-    let users = []
-    if(req.query) {
-        users = await prisma.user.findMany({
-            where: {
-                name: req.query.name,
-                email: req.query.email,
-                age: req.query.age
-            }
-        })
-    } else {
-        const users = await prisma.user.findMany()
+    try {
+        let users;
+        
+        // Verifica se o objeto query possui chaves (filtros)
+        if (Object.keys(req.query).length > 0) {
+            users = await prisma.user.findMany({
+                where: {
+                    name: req.query.name || undefined,
+                    email: req.query.email || undefined,
+                    age: req.query.age ? Number(req.query.age) : undefined
+                }
+            });
+        } else {
+            users = await prisma.user.findMany();
+        }
+
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao buscar usuários no sistema." });
     }
-
-    
-
-    res.status(200).json(users)
-})
+});
 
 app.put('/users/:id', async (req, res) => {
     
